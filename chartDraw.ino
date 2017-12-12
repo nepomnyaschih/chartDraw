@@ -101,7 +101,7 @@ void firstCoreTask(void *pvParameters) {
 void setup() {
   Serial.begin(115200);
   Serial.println();
-  Serial.println("Start... ver. 0.0.1");
+  Serial.println("Start... ver. 0.0.2");
 
   //запуск wifi в режиме точки доступа
   WiFi.softAP(ssid, password);
