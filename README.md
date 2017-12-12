@@ -13,3 +13,5 @@
   5. загрузить скетч
   6. загрузить SPIFFS.
     Tools -> ESP32 Sketch Data Upload
+
+  7. GPIO32 - для подключения датчика
