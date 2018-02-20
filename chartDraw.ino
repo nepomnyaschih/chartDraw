@@ -14,7 +14,9 @@ const char *ssid = "esp32test";
 const char *password = "12345678";
 
 #define SENSOR1 32
-#define PORTIONDATA 500
+#define SENSOR2 33
+
+#define PORTIONDATA 50
 
 struct SensorData {
   int time;
@@ -24,15 +26,40 @@ struct SensorData {
 int iterator = 0;
 
 SensorData sensor1DataCollection[PORTIONDATA];
+SensorData sensor2DataCollection[PORTIONDATA];
 
 void sendDataWs() {
 
   // int sensorVal = analogRead(SENSOR1);
 
   DynamicJsonBuffer jsonBuffer;
-  JsonObject &root = jsonBuffer.createObject(); //создание объекта json
-  JsonArray &test = root.createNestedArray("test");
+  JsonObject &root = jsonBuffer.createObject();
 
+  //sensor 1
+  JsonObject &sens1 = root.createNestedObject("sens1");;
+  sens1["port"] = SENSOR1;
+  JsonArray &sens1data = sens1.createNestedArray("data");
+
+  //sensor 2
+  JsonObject &sens2 = root.createNestedObject("sens2");;
+  sens2["port"] = SENSOR2;
+  JsonArray &sens2data = sens2.createNestedArray("data");
+  
+  for (int i = 0; i < PORTIONDATA; i++) {
+
+      //sensor 1
+      JsonObject &sens1DataObj = sens1data.createNestedObject();
+      sens1DataObj["time"] = sensor1DataCollection[i].time;
+      sens1DataObj["value"] = sensor1DataCollection[i].value;
+
+      //sensor 2
+      JsonObject &sens2DataObj = sens2data.createNestedObject();
+      sens2DataObj["time"] = sensor2DataCollection[i].time;
+      sens2DataObj["value"] = sensor2DataCollection[i].value;
+   
+    }
+
+/*
   for (int i = 0; i < PORTIONDATA; i++) {
 
     JsonArray &tmp = test.createNestedArray();
@@ -42,13 +69,7 @@ void sendDataWs() {
 
     test[i] = tmp;
   }
-
-  // root["val0"] = sensorVal;
-  // root["val1"] = random(255);
-
-  // Serial.println("+++++++++++++++++++++++++++++");
-  // root.prettyPrintTo(Serial);
-  // Serial.println("+++++++++++++++++++++++++++++");
+*/
 
   size_t len = root.measureLength(); //вычисление длины объекта
   AsyncWebSocketMessageBuffer *buffer =
@@ -60,25 +81,22 @@ void sendDataWs() {
 }
 
 void loopChart() {
-
-  int val = analogRead(SENSOR1);
+  int time = millis();
+  
+  int val1 = analogRead(SENSOR1);
+  int val2 = analogRead(SENSOR2);
 
   if (iterator >= PORTIONDATA) {
     iterator = 0;
-    // Serial.println(sensor1DataCollection[0].value);
-
-    // Serial.println();
-    // Serial.print("heap: ");
-    // Serial.println(system_get_free_heap_size());
-
     sendDataWs();
   }
 
-  sensor1DataCollection[iterator].time = millis();
-  sensor1DataCollection[iterator].value = val;
+  sensor1DataCollection[iterator].time = time;
+  sensor1DataCollection[iterator].value = val1;
 
-  // Serial.print("value: ");
-  // Serial.println(val);
+  sensor2DataCollection[iterator].time = time;
+  sensor2DataCollection[iterator].value = val2;
+  
 
   iterator++;
 }

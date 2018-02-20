@@ -1,5 +1,5 @@
 используется arduino ide вместо platform io. так оказалось быстрее.
-## иннструкция по установке
+## инструкция по установке
   1. установить arduino ide. https://www.arduino.cc/en/main/software
   2. добавить поддержку esp32 в arduino. https://github.com/espressif/arduino-esp32
   3. установить плагин для загрузки SPIFFS (использование внутренней памяти) https://github.com/me-no-dev/arduino-esp32fs-plugin
