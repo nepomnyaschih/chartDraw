@@ -1,4 +1,3 @@
-используется arduino ide вместо platform io. так оказалось быстрее.
 ## инструкция по установке
   1. установить arduino ide. https://www.arduino.cc/en/main/software
   2. добавить поддержку esp32 в arduino. https://github.com/espressif/arduino-esp32
@@ -14,4 +13,6 @@
   6. загрузить SPIFFS.
     Tools -> ESP32 Sketch Data Upload
 
-  7. GPIO32 - для подключения датчика
+  7. GPIO32 - для подключения датчика #1
+	 GPIO33 - для подключения датчика #2
+	 GPIO34 - для подключения датчика #3

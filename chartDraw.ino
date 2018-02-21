@@ -15,6 +15,7 @@ const char *password = "12345678";
 
 #define SENSOR1 32
 #define SENSOR2 33
+#define SENSOR3 34
 
 #define PORTIONDATA 50
 
@@ -27,10 +28,9 @@ int iterator = 0;
 
 SensorData sensor1DataCollection[PORTIONDATA];
 SensorData sensor2DataCollection[PORTIONDATA];
+SensorData sensor3DataCollection[PORTIONDATA];
 
 void sendDataWs() {
-
-  // int sensorVal = analogRead(SENSOR1);
 
   DynamicJsonBuffer jsonBuffer;
   JsonObject &root = jsonBuffer.createObject();
@@ -44,6 +44,11 @@ void sendDataWs() {
   JsonObject &sens2 = root.createNestedObject("sens2");;
   sens2["port"] = SENSOR2;
   JsonArray &sens2data = sens2.createNestedArray("data");
+
+  //sensor 3
+  JsonObject &sens3 = root.createNestedObject("sens3");;
+  sens3["port"] = SENSOR3;
+  JsonArray &sens3data = sens3.createNestedArray("data");
   
   for (int i = 0; i < PORTIONDATA; i++) {
 
@@ -56,6 +61,11 @@ void sendDataWs() {
       JsonObject &sens2DataObj = sens2data.createNestedObject();
       sens2DataObj["time"] = sensor2DataCollection[i].time;
       sens2DataObj["value"] = sensor2DataCollection[i].value;
+
+      //sensor 3
+      JsonObject &sens3DataObj = sens3data.createNestedObject();
+      sens3DataObj["time"] = sensor3DataCollection[i].time;
+      sens3DataObj["value"] = sensor3DataCollection[i].value;
    
     }
 
@@ -85,6 +95,7 @@ void loopChart() {
   
   int val1 = analogRead(SENSOR1);
   int val2 = analogRead(SENSOR2);
+  int val3 = analogRead(SENSOR3);
 
   if (iterator >= PORTIONDATA) {
     iterator = 0;
@@ -96,6 +107,9 @@ void loopChart() {
 
   sensor2DataCollection[iterator].time = time;
   sensor2DataCollection[iterator].value = val2;
+
+  sensor3DataCollection[iterator].time = time;
+  sensor3DataCollection[iterator].value = val3;
   
 
   iterator++;
