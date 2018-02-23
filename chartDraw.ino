@@ -17,7 +17,8 @@ const char *password = "12345678";
 #define SENSOR2 33
 #define SENSOR3 34
 
-#define PORTIONDATA 50
+#define PORTIONDATA 100
+#define LOOPCHARTDELAY 10
 
 struct SensorData {
   int time;
@@ -29,6 +30,8 @@ int iterator = 0;
 SensorData sensor1DataCollection[PORTIONDATA];
 SensorData sensor2DataCollection[PORTIONDATA];
 SensorData sensor3DataCollection[PORTIONDATA];
+
+SensorData sensorSUMDataCollection[PORTIONDATA];
 
 void sendDataWs() {
 
@@ -49,6 +52,11 @@ void sendDataWs() {
   JsonObject &sens3 = root.createNestedObject("sens3");;
   sens3["port"] = SENSOR3;
   JsonArray &sens3data = sens3.createNestedArray("data");
+
+  //sum
+  JsonObject &sum = root.createNestedObject("sum");;
+  sum["port"] = 0;
+  JsonArray &sumData = sum.createNestedArray("data");
   
   for (int i = 0; i < PORTIONDATA; i++) {
 
@@ -66,6 +74,11 @@ void sendDataWs() {
       JsonObject &sens3DataObj = sens3data.createNestedObject();
       sens3DataObj["time"] = sensor3DataCollection[i].time;
       sens3DataObj["value"] = sensor3DataCollection[i].value;
+
+      //sensor 3
+      JsonObject &sumDataObj = sumData.createNestedObject();
+      sumDataObj["time"] = sensorSUMDataCollection[i].time;
+      sumDataObj["value"] = sensorSUMDataCollection[i].value;
    
     }
 
@@ -110,7 +123,9 @@ void loopChart() {
 
   sensor3DataCollection[iterator].time = time;
   sensor3DataCollection[iterator].value = val3;
-  
+
+  sensorSUMDataCollection[iterator].time = time;
+  sensorSUMDataCollection[iterator].value = val1+val2+val3;
 
   iterator++;
 }
@@ -125,7 +140,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client,
 void firstCoreTask(void *pvParameters) {
   while (true) {
     // Serial.println("tic");
-    delay(10);
+    delay(LOOPCHARTDELAY);
     loopChart();
   }
 }
